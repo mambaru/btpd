@@ -1,0 +1,40 @@
+name: C++ CI
+
+on:
+  push:
+    branches:
+      - mambaru
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+
+      - name: Установка пакетов
+        run: |
+          sudo locale-gen ru_RU
+          sudo locale-gen ru_RU.UTF-8
+          sudo update-locale
+
+          sudo apt-get install -y lcov
+          ./boost-setup.sh
+        working-directory: ./.github/workflows
+
+
+      - name: Подключение субмодулей (прописаны в cmake)
+        run: |
+          mkdir -p build
+          pushd build
+            cmake ..
+          popd
+
+      - name: Коммит субмодулей
+        run: |
+          git checkout -b mamba-ready
+          echo "Субмодули подключаються при первой сборке (фиксируем их)"
+          git config --global user.email "migashko@gmail.com"
+          git config --global user.name "Vladimir Migashko"
+          git add .
+          git commit -am "[subm] build submodule autocommit" || true
+          git push -f https://${{ secrets.ACCESS_TOKEN }}@github.com/${GITHUB_REPOSITORY}.git mamba-ready:mamba-ready

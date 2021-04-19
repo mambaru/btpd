@@ -1,0 +1,7 @@
+git pull --tags
+git submodule update --init --recursive
+[ -d build ] || mkdir build
+cd build
+make -j4
+cd ..
+
