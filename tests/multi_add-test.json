@@ -10,7 +10,7 @@
   "params":{
     /*"value": "{%random.randint(1, 100000)%}",*/
     "count": 10000,
-    "value1": "{%random.sample(range(1, 100000/random.randint(1, 4)), ${count})%}",
+    "value1": "{%random.sample(range(1, 100000//random.randint(1, 4)), ${count})%}",
     "value2": "{%random.sample(range(1, 1000000), 10)%}",
     "value" : "{% ${value1} + ${value2}%}",
     "add1-params":{"name":"service~~btpd-test~~multi_add", "cl":"${value}", "count":"${count}"},

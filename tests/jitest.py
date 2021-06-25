@@ -1,1 +1,1 @@
-../wfcroot/wfc/jitest/jitest.py
+../external/wfcroot/external/wfc/jitest/jitest.py
