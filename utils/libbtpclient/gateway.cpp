@@ -9,12 +9,13 @@ class gateway::impl
             ag::gateway::interface_< ag::gateway::method_list >  
     > > 
 {
+public:
 };
 
 void gateway::start(handler h)
 {
   using namespace std::placeholders;
-  impl::options_type opt;
+  wfc::jsonrpc::basic_options<impl::options_type> opt;
   _impl = std::make_shared<impl>();
   _impl->start(opt, 1);
   _impl->reg_io(41, std::bind(h, _1) );

@@ -12,7 +12,7 @@ public:
   typedef iow::io::data_type data_type;
   typedef std::function<void(data_ptr)> handler;
 
-  void start(io_context& io, std::string addr, std::string port, handler h);
+  void start(io_context& io, const std::string& addr, const std::string& port, handler h);
   void send(data_ptr d);
 private:
   std::shared_ptr<impl> _impl;

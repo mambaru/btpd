@@ -14,7 +14,7 @@ class btpclient
 public:
   typedef boost::asio::io_context io_context;
   typedef wamba::btp::aggregated_list aggregated_list;
-  void start(io_context& io, std::string addr, std::string port);
+  void start(io_context& io, const std::string& addr, const std::string& port);
 
   void get_names( std::function<void(std::vector<std::string>)> handler);
   void get( const std::string& name, std::function<void(aggregated_list&&)> handler );

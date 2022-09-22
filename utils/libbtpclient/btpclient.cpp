@@ -3,7 +3,7 @@
 #include "gateway.hpp"
 #include <functional>
 
-void btpclient::start(io_context& io, std::string addr, std::string port)
+void btpclient::start(io_context& io, const std::string& addr, const std::string& port)
 {
   using namespace std::placeholders;
   _client =  std::make_shared<client>();

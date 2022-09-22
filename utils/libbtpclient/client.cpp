@@ -10,7 +10,7 @@ public:
   explicit impl(io_context& io): self(io) {}
 };
 
-void client::start(io_context& io, std::string addr, std::string port, handler h)
+void client::start(io_context& io, const std::string& addr, const std::string& port, handler h)
 {
   _impl = std::make_shared<impl>(io);
   iow::ip::tcp::client::options opt;
