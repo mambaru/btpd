@@ -1,0 +1,366 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=9"/>
+<meta name="generator" content="Doxygen 1.8.17"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>btpd: API агрегатора (входящий поток данных)</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+<link href="customdoxygen.css" rel="stylesheet" type="text/css"/>
+</head>
+<body>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr style="height: 56px;">
+  <td id="projectalign" style="padding-left: 0.5em;">
+   <div id="projectname">btpd
+   </div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- Создано системой Doxygen 1.8.17 -->
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:cf05388f2679ee054f2beb29a391d25f4e673ac3&amp;dn=gpl-2.0.txt GPL-v2 */
+$(function() {
+  initMenu('',false,false,'search.php','Поиск');
+});
+/* @license-end */</script>
+<div id="main-nav"></div>
+</div><!-- top -->
+<div class="PageDoc"><div class="header">
+  <div class="headertitle">
+<div class="title">API агрегатора (входящий поток данных) </div>  </div>
+</div><!--header-->
+<div class="contents">
+<div class="textblock"><p>[[<em>TOC</em>]]</p>
+<p>С помощью этих методов сервер принимает сырые или частично агрегированные данные на первичную обработку и сохранение. Для получения данных для отображения на графиках или анализа используйте <a class="el" href="md_docs-md_api-ag.html">API хранилища</a>.</p>
+<p>Протокол взаимодействия - это текстовый JSONRPC сообщения разделенные символами \r<br  />
+ по TCP/UDP. HTTP обвязки не используются. Можно подключиться к серверу по telnet и отправить сообщение на сервер составленное в простом текстовом редакторе и получить ответ.</p>
+<p>Пример JSONRPC запроса: </p><div class="fragment"><div class="line">{&quot;jsonrpc&quot;:&quot;2.0&quot;, &quot;method&quot;:&quot;push&quot;, &quot;params&quot;:{ ... }, &quot;id&quot;:1}</div>
+</div><!-- fragment --><p>Пример JSONRPC ответа: </p><div class="fragment"><div class="line">{&quot;jsonrpc&quot;:&quot;2.0&quot;, &quot;result&quot;:{ ... }, &quot;id&quot;:1}</div>
+</div><!-- fragment --><p>Здесь <b>id</b> - идентификатор запроса. Может быть любым, по нему определяется соответствие запросов и ответов при асинхронном взаимодействии.</p>
+<p>Пример JSONRPC уведомления: </p><div class="fragment"><div class="line">{&quot;jsonrpc&quot;:&quot;2.0&quot;, &quot;method&quot;:&quot;push&quot;, &quot;params&quot;:{ ... }}</div>
+</div><!-- fragment --><p>Здесь и далее в описании методов будут приводиться только поля для <b>params</b> и <b>result</b></p>
+<h1><a class="anchor" id="autotoc_md14"></a>
+Метод push</h1>
+<h2><a class="anchor" id="autotoc_md15"></a>
+Метод push - первичная агрегация</h2>
+<p>Основной метод отправки данных на сервер. Как правило для этого используется UDP-протокол, TCP может использоваться для проверки, что система настроена правильно (должен прийти ответ без ошибок). По UDP-протокол сообщение также должно заканчиватся комбинацией \r<br  />
+. <br  />
+</p>
+<div class="fragment"><div class="line">{</div>
+<div class="line">  &quot;count&quot;: 0,</div>
+<div class="line">  &quot;data&quot;:[0],</div>
+<div class="line">  &quot;name&quot;:&quot;&quot;</div>
+<div class="line">}</div>
+</div><!-- fragment --><ul>
+<li><b>name</b> - имя счетчика. Может быть произвольным, но лучше придерживаться концепции SSSO</li>
+<li><b>data</b> - сырые данные для счетчика в любых попугаях (как временные интервалы, так и размеры - любые числа)</li>
+<li><b>count</b> - текущее значение счетчика. Если не указан, то принимается равным размеру массива <b>data</b></li>
+</ul>
+<p>Если нужно регистрировать разовые события, например время выполнения какого-либо скрипта или время выполнения запроса, то на сервер достаточно отправить имя счетчика и измеренное время выполнения: </p><div class="fragment"><div class="line">{&quot;method&quot;:&quot;push&quot;, &quot;params&quot;:{&quot;name&quot;:&quot;script~~MyScript~~MyService~~MyOp&quot;, &quot;data&quot;:[200]}}</div>
+</div><!-- fragment --><p>Если посмотреть на любой график btp:</p>
+<p><img src="images/btpd-5s-2.png" alt="" class="inline"/></p>
+<p>Здесь зеленый - это количество значений <b>data</b> зарегистрированных сервером (шт. в секунду или в шт. на данном масштабе агрегации). Это точное значение, по нему можно судить о числе событий в системе. А сами данные, после аггрегации, сохраняются в виде перцентилей. Сам подсчет перцентилей не всегда идет на полном массиве данных, а после процедуры прореживания, поэтому, в общем, их нельзя считать обсолютно точными.</p>
+<p>Если нам нужно регистрировать только число событий в системе (только зеленый график), то можно передавать только значения счетчика: </p><div class="fragment"><div class="line">{&quot;method&quot;:&quot;push&quot;, &quot;params&quot;:{&quot;name&quot;:&quot;script~~MyScript~~MyService~~MyOp&quot;, &quot;count&quot;:1}}</div>
+</div><!-- fragment --><p>Количество событий и измерянных значений может не совпадать: </p><div class="fragment"><div class="line">{&quot;method&quot;:&quot;push&quot;, &quot;params&quot;:{&quot;name&quot;:&quot;script~~MyScript~~MyService~~MyOp&quot;, &quot;count&quot;:20,&quot;data&quot;:[201, 240, 210, 232, 223]}}</div>
+</div><!-- fragment --><p>Здесь у нас 20 событий, а измерили мы только 5 из них. Т.е. зеленый график у нас будет построен по сумме <b>count</b>, а перцентили из того что насобирает из <b>data</b>.</p>
+<p>Если следовать концепции SSSO, то на самом деле нам нужно как минимум три счетчика: </p><div class="fragment"><div class="line">{&quot;method&quot;:&quot;push&quot;, &quot;params&quot;:{&quot;name&quot;:&quot;script~~MyScript~~MyService~~MyOp&quot;, &quot;data&quot;:[200]}}</div>
+<div class="line">{&quot;method&quot;:&quot;push&quot;, &quot;params&quot;:{&quot;name&quot;:&quot;service~~MyService~~MyOp&quot;, &quot;data&quot;:[200]}}</div>
+<div class="line">{&quot;method&quot;:&quot;push&quot;, &quot;params&quot;:{&quot;name&quot;:&quot;service~~MyService~~MyServer~~MyOp&quot;, &quot;data&quot;:[200]}}</div>
+</div><!-- fragment --><p>Для отправки нескольких счетчиков лучше использовать метод <a href="#multi_push">multi_push</a>, который позволит сократить избыточность в именах и как следствие уменьшить траффик.</p>
+<h2><a class="anchor" id="autotoc_md16"></a>
+Метод push - вторичная агрегация</h2>
+<p>Этот вариант используется первичным агрегатором для передачи данных последующим в цепочке. Вы также можете его использовать, чтобы передать данные минуя первичный агрегатор, например если сделали самостоятельно проредили данные и понимаете, что вы делаете.</p>
+<div class="fragment"><div class="line">{</div>
+<div class="line">  &quot;count&quot;: 0,</div>
+<div class="line">  &quot;lossy&quot;: 0,</div>
+<div class="line">  &quot;min&quot;: 0,</div>
+<div class="line">  &quot;max&quot;:0,</div>
+<div class="line">  &quot;data&quot;:[0],</div>
+<div class="line">  &quot;name&quot;:&quot;&quot;</div>
+<div class="line">}</div>
+</div><!-- fragment --><ul>
+<li><b>name</b> - имя счетчика. Может быть произвольным, но лучше придерживаться концепции SSSO</li>
+<li><b>data</b> - прореженные данные для счетчика</li>
+<li><b>count</b> - значение счетчика. В данном контексте обязателен</li>
+<li><b>min</b> - минимальное зарегистрированное значение в сырых данных до прореживания, а не из тех,что попали в <b>data</b></li>
+<li><b>max</b> - максимальное зарегистрированное значение в сырых данных до прореживания, а не из тех, что попали в <b>data</b></li>
+<li><b>lossy</b> - отброшено значений в штуках при прореживании. При первичном прореживании это значение равно count-size(data), для последующих этапов это не так.</li>
+</ul>
+<h2><a class="anchor" id="autotoc_md17"></a>
+Метод push - запись в хранилище</h2>
+<p>Используется агрегаторам для передачи данных в хранилище для сохранения.</p>
+<div class="fragment"><div class="line">{</div>
+<div class="line">  &quot;ts&quot;: 0,</div>
+<div class="line">  &quot;count&quot;: 0,</div>
+<div class="line">  &quot;lossy&quot;: 0,</div>
+<div class="line">  &quot;min&quot;: 0,</div>
+<div class="line">  &quot;max&quot;: 0,</div>
+<div class="line">  &quot;perc50&quot;: 0,</div>
+<div class="line">  &quot;perc80&quot;: 0,</div>
+<div class="line">  &quot;perc95&quot;: 0,</div>
+<div class="line">  &quot;perc99&quot;: 0,</div>
+<div class="line">  &quot;perc100&quot;: 0,</div>
+<div class="line">  &quot;data&quot;:[0],</div>
+<div class="line">  &quot;name&quot;:&quot;&quot;</div>
+<div class="line">}</div>
+</div><!-- fragment --><ul>
+<li><b>ts</b> - текущее время в тех единицах, на которое настроенно хранилище (см. настнойку <b>resolution</b>)</li>
+<li><b>name</b> - имя счетчика. Может быть произвольным, но лучше придерживаться концепции SSSO</li>
+<li><b>data</b> - прореженные данные для счетчика. Могут использоваться хранилищами для пересчета перцентилей, если значение <b>ts</b> не кратно масштабу хранилища. (например для часового хранилища <b>ts</b> должен быть выровнен по часу от time() ).</li>
+<li><b>count</b> - значение счетчика. В данном контексте обязателен</li>
+<li><b>min</b> - минимальное зарегестрированное значение в сырых данных</li>
+<li><b>perc50</b>, <b>perc80</b>, <b>perc95</b>, <b>perc99</b>, <b>perc100</b> - перцентили для сохранения</li>
+<li><b>max</b> - максимальное зарегестрированное значение в сырых данных</li>
+<li><b>lossy</b> - отброшено значений в штуках при прореживании.</li>
+</ul>
+<h2><a class="anchor" id="autotoc_md18"></a>
+Метод push - компактный вариант</h2>
+<p>В целях эконимии трафика, чтобы не забивать сеть избыточностью JSONRPC, данные можно передавать не в виде структуры, а в виде массива, где каждый элемент соответствует полю структуры.</p>
+<p><b>Важно!</b> - этот вид запроса не совместим с обычным вариантом, поэтому для него нужно открыть отдельный порт и настроить соответствующий сервис! В таком варианте он не сильно отличается от бинарных форматов, а в частных случаях даже превосходит их. Последовательность элемнтов нужно соблюдать строго, значения по умолчанию для всех - 0.</p>
+<div class="fragment"><div class="line">[&quot;&quot;, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, [0] ]</div>
+</div><!-- fragment --><ul>
+<li><b>0</b> - <b>name</b></li>
+<li><b>1</b> - <b>ts</b></li>
+<li><b>2</b> - <b>avg</b></li>
+<li><b>3</b> - <b>count</b></li>
+<li><b>4</b> - <b>perc50</b></li>
+<li><b>5</b> - <b>perc80</b></li>
+<li><b>6</b> - <b>perc95</b></li>
+<li><b>7</b> - <b>perc99</b></li>
+<li><b>8</b> - <b>perc100</b></li>
+<li><b>9</b> - <b>min</b></li>
+<li><b>10</b> - <b>max</b></li>
+<li><b>11</b> - <b>lossy</b></li>
+<li><b>12</b> - <b>data</b></li>
+</ul>
+<p>пример полного JSONRPC уведоиления:</p>
+<div class="fragment"><div class="line">{&quot;method&quot;:&quot;push&quot;, &quot;params&quot;:[&quot;script~~MyScript~~MyService~~MyOp&quot;, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, [200]]}</div>
+</div><!-- fragment --><h1><a class="anchor" id="autotoc_md19"></a>
+Метод multi_push</h1>
+<p>Для оптимизации траффика данные для множества счетчиков лучше отправлять одним уведомлением(запросом) - для этого используеться этот метод. Например, может использоваться при завершение работы скрипта, чтобы отправить все метрики одним запросом. Если исползуется UDP, то нужно следить чтобы размер сообщения не превышал ограничения UDP-пакета, при необходимости разбивать его на несколько.</p>
+<div class="fragment"><div class="line">{</div>
+<div class="line">  &quot;data&quot;:[</div>
+<div class="line">    {</div>
+<div class="line">      &quot;name&quot;:&quot;&quot;, </div>
+<div class="line">      &quot;count&quot;:0,</div>
+<div class="line">      &quot;data&quot;:[0]}</div>
+<div class="line">  ]</div>
+<div class="line">}</div>
+</div><!-- fragment --><ul>
+<li><b>data</b> массив данных, где каждый элемент совпдает с параметрами метода <b>push</b></li>
+</ul>
+<h2><a class="anchor" id="autotoc_md20"></a>
+Метод multi_push - оптимизация передачи имен</h2>
+<p>Если вы используете концепцию SSSO, то имена счетчиков могут состовлять большую часть в отправленных сообщениях. Их можно сократить, например:</p>
+<div class="fragment"><div class="line">{</div>
+<div class="line">  &quot;data&quot;:[</div>
+<div class="line">    {&quot;name&quot;:&quot;script~~MyScript~~MyService~~MyOp&quot;, &quot;data&quot;:[200]},</div>
+<div class="line">    {&quot;name&quot;:&quot;service~~MyService~~MyOp&quot;, &quot;data&quot;:[200]},</div>
+<div class="line">    {&quot;name&quot;:&quot;service~~MyService~~MyServer~~MyOp&quot;, &quot;data&quot;:[200]}</div>
+<div class="line">  ]</div>
+<div class="line">}</div>
+</div><!-- fragment --><p>Можно отправить таким образом: </p><div class="fragment"><div class="line">{</div>
+<div class="line">  &quot;legend&quot;:[&quot;script&quot;, &quot;service&quot;, &quot;MyScript&quot;, &quot;MyService&quot;, &quot;MyServer&quot;, &quot;MyOp&quot;], </div>
+<div class="line">  &quot;separator&quot;:&quot;~~&quot;,</div>
+<div class="line">  &quot;data&quot;:[</div>
+<div class="line">    {&quot;name&quot;:&quot;0~2~3~5&quot;, &quot;data&quot;:[200]},</div>
+<div class="line">    {&quot;name&quot;:&quot;1~3~5&quot;, &quot;data&quot;:[200]},</div>
+<div class="line">    {&quot;name&quot;:&quot;1~3~4~5&quot;, &quot;data&quot;:[200]}</div>
+<div class="line">  ]</div>
+<div class="line">}</div>
+</div><!-- fragment --><p>В соответствии с концепцией SSSO имя счетчика представлет с собой путь, элементы которого разделены разделителем, по умолчанию это двойная тильда **~~**. Все элементы пути всех счетчиков в конкретном сообщии заносятся в массив <b>legend</b>, а в именах счетчиков проставляются соответствующие индексы, разделитель заменяется на одиночную тильду **~** . Заметим, что оригинальные имена могут иметь произвольный разделитель, который нужно передать в поле <b>separator</b>, а в сокращенном виде разделитель строго определен, и это всегда одиночная тильда **~**.</p>
+<h1><a class="anchor" id="autotoc_md21"></a>
+Метод multi_push - компактный вариант</h1>
+<p>В этом варианте все структуры заменяются на вложенные массивы, где каждый элемент соответствует определенному полю структуры. Аналогично методу <b>push</b> для такого варианта нужно настроить отдельный порт. Т.е. нужен отельнеый порт для обработки компактных вариантов вызова <b>push</b> и <b>multi_push</b>. Также в компактном варианте возможно (рекомендуется) использовать оптимизацию передачи имен счетчиков.</p>
+<div class="fragment"><div class="line">[</div>
+<div class="line">  &quot;&quot;,</div>
+<div class="line">  [&quot;&quot;],</div>
+<div class="line">  [</div>
+<div class="line">    [&quot;&quot;, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, [0] ]</div>
+<div class="line">  ]</div>
+<div class="line">]</div>
+</div><!-- fragment --><ul>
+<li><b>0</b> - <b>separator</b></li>
+<li><b>1</b> - <b>legend</b></li>
+<li><b>2</b> - <b>data</b> - массив полей <b>push</b> в ввиде массивов</li>
+</ul>
+<h1><a class="anchor" id="autotoc_md22"></a>
+Метод del - удаление счетчиков</h1>
+<p>Удаляет сччетчики во всех хранилищах</p>
+<div class="fragment"><div class="line">{</div>
+<div class="line">  &quot;names&quot;:[&quot;&quot;]</div>
+<div class="line">}</div>
+</div><!-- fragment --><ul>
+<li><b>names</b> - список имен для удаления</li>
+</ul>
+<h1><a class="anchor" id="autotoc_md23"></a>
+API хранилища (для отображения данных)</h1>
+<h2><a class="anchor" id="autotoc_md24"></a>
+Метод get - получить данные для отображения</h2>
+<p>Для получения данных для построения графика, достаточно указать имя счетчика и количество точек (обычно 3000) которые будут загруженны относительно текущего времени. Воздержитесь от использования <b>ts</b>/**offset** если в этом нет необходимости (указать 0 или не использовать в запросе).</p>
+<p><b>Важно!</b> - значение <b>ts</b> нужно указывать в в единицах, которая задана в конфигрурации сервера! Это поле <b>btp-ag/key_cache/resolution</b>, обычно микросекунды (время в секундах * 1000000)</p>
+<div class="fragment"><div class="line">{</div>
+<div class="line">  &quot;name&quot;:&quot;&quot;,</div>
+<div class="line">  &quot;power&quot;:false,</div>
+<div class="line">  &quot;offset&quot;:0,</div>
+<div class="line">  &quot;limit&quot;:0,</div>
+<div class="line">  &quot;ts&quot;:0</div>
+<div class="line">}</div>
+</div><!-- fragment --><ul>
+<li><b>name</b> - название счетчика</li>
+<li><b>power</b> - возвращать мощность (все значения умножаються на count)</li>
+<li><b>offset</b> - смещение относительно <b>ts</b></li>
+<li><b>limit</b> - ограничение число значений (относительно <b>ts</b>/**offset**)</li>
+<li><b>ts</b> - отметка времени (в единицах, которые определены в конфигурации, обычно микросекунды) с которой загружать счетчии. Если 0 - то расчитываеться иcходя из значения <b>limit</b>.</li>
+</ul>
+<p>Информация о каждой точке возвращаеться в виде массива фиксированного размера Ответ: </p><div class="fragment"><div class="line">{</div>
+<div class="line">  &quot;counters&quot;:[</div>
+<div class="line">    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], ...</div>
+<div class="line">  ]</div>
+<div class="line">}</div>
+</div><!-- fragment --><ul>
+<li><b>counters</b> массив с информацией о точках, для построения графика:</li>
+<li><b>0 - ts</b> - отметка времени начала интервала точки (в единицах, которые определены в конфигурации, обычно микросекунды)</li>
+<li><b>1 - avg</b> - среднее значение</li>
+<li><b>2 - count</b> - количество значений за данный интервал</li>
+<li><b>3 - perc50</b> - 50% процентов значений за данный интерва меньше или равно этого числа</li>
+<li><b>4 - perc80</b> - 80% процентов значений за данный интерва меньше или равно этого числа</li>
+<li><b>5 - perc95</b> - 95% процентов значений за данный интерва меньше или равно этого числа</li>
+<li><b>6 - perc99</b> - 99% процентов значений за данный интерва меньше или равно этого числа</li>
+<li><b>7 - perc100</b> -</li>
+<li><b>8 - min</b> - минимальное значение на интервале</li>
+<li><b>9 - max</b> - максимальное значение на интервале</li>
+<li><b>10- lossy</b> -</li>
+</ul>
+<h2><a class="anchor" id="autotoc_md25"></a>
+Метод multi_get - получить данные для отображения нескольких графиков</h2>
+<p>Аналогично <a href="api-rt.md#метод-get-получить-данные-для-отображения">get</a>, но для нескольких графиков</p>
+<div class="fragment"><div class="line">{</div>
+<div class="line">  &quot;name&quot;:[&quot;&quot;],</div>
+<div class="line">  &quot;power&quot;:false,</div>
+<div class="line">  &quot;offset&quot;:0,</div>
+<div class="line">  &quot;limit&quot;:0,</div>
+<div class="line">  &quot;ts&quot;:0</div>
+<div class="line">}</div>
+</div><!-- fragment --><ul>
+<li><b>names</b> - список имен графиков</li>
+<li>остальные параметры см. <a href="api-rt.md#метод-get-получить-данные-для-отображения">get</a></li>
+</ul>
+<div class="fragment"><div class="line">{</div>
+<div class="line">  &quot;data&quot;:[</div>
+<div class="line">    {</div>
+<div class="line">    &quot;name&quot;:&quot;&quot;,</div>
+<div class="line">    &quot;counters&quot;:[</div>
+<div class="line">      [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], ...</div>
+<div class="line">    ]</div>
+<div class="line">    }</div>
+<div class="line">  ]</div>
+<div class="line">}</div>
+</div><!-- fragment --><ul>
+<li><b>data</b> - массив объектов с данными для графиков ** <b>name</b> - имя графика ** <b>counters</b> - см. <a href="api-rt.md#метод-get-получить-данные-для-отображения">get</a></li>
+</ul>
+<h2><a class="anchor" id="autotoc_md26"></a>
+Метод select</h2>
+<div class="fragment"><div class="line">{</div>
+<div class="line">  &quot;prefix&quot;:&quot;&quot;,</div>
+<div class="line">  &quot;suffix&quot;:&quot;&quot;,</div>
+<div class="line">  &quot;offset&quot;:0,</div>
+<div class="line">  &quot;limit&quot;:10,</div>
+<div class="line">  &quot;sortby&quot;:&quot;nosort&quot;,</div>
+<div class="line">  &quot;power&quot;:false</div>
+<div class="line">}</div>
+</div><!-- fragment --><ul>
+<li><b>prefix</b></li>
+<li><b>suffix</b></li>
+<li><b>offset</b></li>
+<li><b>limit</b></li>
+<li><b>sortby</b></li>
+<li><b>nosort</b></li>
+<li><b>avg</b></li>
+<li><b>count</b></li>
+<li><b>perc50</b></li>
+<li><b>perc80</b></li>
+<li><b>perc95</b></li>
+<li><b>perc99</b></li>
+<li><b>perc100</b></li>
+<li><b>min</b></li>
+<li><b>max</b></li>
+<li><b>lossy</b></li>
+<li><b>power</b></li>
+</ul>
+<div class="fragment"><div class="line">{</div>
+<div class="line">  &quot;names_ts&quot;:[</div>
+<div class="line">    [&quot;&quot;,0], </div>
+<div class="line">    ...</div>
+<div class="line">  ]</div>
+<div class="line">}</div>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md27"></a>
+Метод tree</h2>
+<h2><a class="anchor" id="autotoc_md28"></a>
+Метод merge</h2>
+<h2><a class="anchor" id="autotoc_md29"></a>
+Метод compact</h2>
+<h2><a class="anchor" id="autotoc_md30"></a>
+Метод get_names (deprecated)</h2>
+<p><b>[ DEPRECATED ]</b></p>
+<div class="fragment"><div class="line">{</div>
+<div class="line">  &quot;prefix&quot;:&quot;&quot;,</div>
+<div class="line">  &quot;suffix&quot;:&quot;&quot;,</div>
+<div class="line">  &quot;offset&quot;:0,</div>
+<div class="line">  &quot;limit&quot;:10,</div>
+<div class="line">  &quot;sortby&quot;:&quot;nosort&quot;,</div>
+<div class="line">  &quot;power&quot;:false</div>
+<div class="line">}</div>
+</div><!-- fragment --><ul>
+<li><b>prefix</b></li>
+<li><b>suffix</b></li>
+<li><b>offset</b></li>
+<li><b>limit</b></li>
+<li><b>sortby</b></li>
+<li><b>nosort</b></li>
+<li><b>avg</b></li>
+<li><b>count</b></li>
+<li><b>perc50</b></li>
+<li><b>perc80</b></li>
+<li><b>perc95</b></li>
+<li><b>perc99</b></li>
+<li><b>perc100</b></li>
+<li><b>min</b></li>
+<li><b>max</b></li>
+<li><b>lossy</b></li>
+<li><b>power</b></li>
+</ul>
+<div class="fragment"><div class="line">{</div>
+<div class="line">  &quot;names_ts&quot;:[</div>
+<div class="line">    {</div>
+<div class="line">      &quot;name&quot;:&quot;&quot;,</div>
+<div class="line">      &quot;value&quot;:0</div>
+<div class="line">    }</div>
+<div class="line">  ]</div>
+<div class="line">}</div>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md31"></a>
+Метод get_name_tree (deprecated)</h2>
+<p><b>[ DEPRECATED ]</b> </p>
+</div></div><!-- contents -->
+</div><!-- PageDoc -->
+<!-- start footer part -->
+<hr class="footer"/><address class="footer"><small>
+Создано системой &#160;<a href="http://www.doxygen.org/index.html">
+<img class="footer" src="doxygen.png" alt="doxygen"/>
+</a> 1.8.17
+</small></address>
+</body>
+</html>
