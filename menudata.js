@@ -21,4 +21,5 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 for the JavaScript code in this file
 */
 var menudata={children:[
-{text:"Титульная страница",url:"index.html"}]}
+{text:"Титульная страница",url:"index.html"},
+{text:"Описания",url:"pages.html"}]}
