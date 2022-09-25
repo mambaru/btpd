@@ -1,0 +1,56 @@
+{
+  "server-tcp": [
+    {
+      "enabled": $INI{ag5s.enabled:true},
+      "name": "tcp-5s",
+      "startup_priority":1000,
+      "shutdown_priority":-1000,
+      "target": "jsonrpc-5s",
+      "threads": $INI{ag5s.treads:1},
+      "addr": "$INI{ag5s.addr:0.0.0.0}",
+      "port": "$INI{ag5s.port:37000}"
+    }
+  ],
+  "ag-service": [
+    {
+      "name": "jsonrpc-5s",
+      "target": "btp-ag5s",
+      "allow_non_jsonrpc": true,
+      "disable_handler_map": true
+    }
+  ],
+  "btp-ag": [
+    {
+      "name": "btp-ag5s",
+      "enabled": true,
+      "suspend": $INI{ag5s.enabled:true},
+      "key_cache": {
+        "mutex_hash": 1024,
+        "gc_interval":3600,
+        "TTL": 15000,
+        "aggregate_last_point": false,
+        "reducer_limit": 16384,
+        "reducer_levels": 16,
+        "resolution": "microseconds",
+        "outgoing_reduced_size": 0,
+        "soiled_start_ts": 5000000,
+        "aggregation_step_ts": 5000000
+      },
+      "key_db": {
+        "db_path": "$INI{db.path:btp/}$INI{ag5s.name:ag5s/}keys",
+        "wal_path": "",
+        "ini_path": "rocksdb-keys.ini",
+        "TTL": 15000,
+        "create_if_missing": true
+      },
+      "data_db": {
+        "db_path": "$INI{db.path:btp/}$INI{ag5s.name:ag5s/}data",
+        "wal_path": "",
+        "ini_path": "rocksdb-data.ini",
+        "TTL": 15000,
+        "hash_size": 16,
+        "create_if_missing": true
+      }
+    }
+  ]
+}

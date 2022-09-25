@@ -1,0 +1,56 @@
+{
+  "server-tcp": [
+    {
+      "enabled": $INI{ag7m.enabled:true},
+      "name": "tcp-7m",
+      "startup_priority":1000,
+      "shutdown_priority":-1000,
+      "target": "jsonrpc-7m",
+      "threads": $INI{ag7m.treads:1},
+      "addr": "$INI{ag7m.addr:0.0.0.0}",
+      "port": "$INI{ag7m.port:37002}"
+    }
+  ],
+  "ag-service": [
+    {
+      "name": "jsonrpc-7m",
+      "target": "btp-ag7m",
+      "allow_non_jsonrpc": true,
+      "disable_handler_map": true
+    }
+  ],
+  "btp-ag": [
+    {
+      "name": "btp-ag7m",
+      "enabled": true,
+      "suspend": $INI{ag7m.enabled:true},
+      "key_cache": {
+        "mutex_hash": 1024,
+        "gc_interval":3600,
+        "TTL": 1260000,
+        "aggregate_last_point": false,
+        "reducer_limit": 896,
+        "reducer_levels": 2,
+        "resolution": "microseconds",
+        "outgoing_reduced_size": 0,
+        "soiled_start_ts": 0,
+        "aggregation_step_ts": 420000000
+      },
+      "key_db": {
+        "db_path": "$INI{db.path:btp/}$INI{ag7m.name:ag7m/}keys",
+        "wal_path": "",
+        "ini_path": "rocksdb-keys.ini",
+        "TTL": 1260000,
+        "create_if_missing": true
+      },
+      "data_db": {
+        "db_path": "$INI{db.path:btp/}$INI{ag7m.name:ag7m/}data",
+        "wal_path": "",
+        "ini_path": "rocksdb-data.ini",
+        "TTL": 1260000,
+        "hash_size": 16,
+        "create_if_missing": true
+      }
+    }
+  ]
+}

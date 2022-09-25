@@ -1,0 +1,145 @@
+{
+  "server-udp":[
+    {
+      "name": "rt-udp",
+      "enabled": $INI{rt-udp.enabled:true},
+      "suspend": false,
+      "startup_priority":  1000,
+      "shutdown_priority": -1000,
+      "target": "jsonrpc-rt",
+      "reader": { "sep": "\r\n", "bufsize": 65535, "maxbuf": 65535 },
+      "writer": { "sep": "\r\n", "bufsize": 65535, "maxbuf": 65535 },
+      "receive_buffer_size": 128000000,
+      "threads": $INI{rt-udp.treads:8},
+      "addr": "$INI{rt-udp.addr:0.0.0.0}",
+      "port": "$INI{rt-udp.port:38000}"
+    },
+    {
+      "name": "rt-udp-compact",
+      "enabled": $INI{rt-udp-compact.enabled:true},
+      "suspend": false,
+      "startup_priority":  1000,
+      "shutdown_priority": -1000,
+      "target": "jsonrpc-rt-compact",
+      "reader": { "sep": "\r\n", "bufsize": 65535, "maxbuf": 65535 },
+      "writer": { "sep": "\r\n", "bufsize": 65535, "maxbuf": 65535 },
+      "receive_buffer_size": 128000000,
+      "threads": $INI{rt-udp-compact.treads:8},
+      "addr": "$INI{rt-udp-compact.addr:0.0.0.0}",
+      "port": "$INI{rt-udp-compact.port:38001}"
+    }
+  ],
+
+  "server-tcp": [
+    {
+      "name": "rt-tcp",
+      "enabled": $INI{rt-tcp.enabled:true},
+      "suspend": false,
+      "startup_priority":1000,
+      "shutdown_priority":-1000,
+      "target": "jsonrpc-rt",
+      "threads": $INI{rt-tcp.treads:1},
+      "addr": "$INI{rt-tcp.addr:0.0.0.0}",
+      "port": "$INI{rt-tcp.port:38000}"
+    },
+    {
+      "name": "rt-tcp-compact",
+      "enabled": $INI{rt-tcp-compact.enabled:true},
+      "suspend": false,
+      "startup_priority":1000,
+      "shutdown_priority":-1000,
+      "target": "jsonrpc-rt-compact",
+      "threads": $INI{rt-tcp-compact.treads:1},
+      "addr": "$INI{rt-tcp-compact.addr:0.0.0.0}",
+      "port": "$INI{rt-tcp-compact.port:38001}"
+    }
+  ],
+
+  "statistics-service": [
+    {
+      "name": "jsonrpc-rt",
+      "target": "rt-ag1s",
+      "allow_non_jsonrpc": true,
+      "disable_handler_map": false
+    }
+  ],
+
+  "statistics-service-compact": [
+    {
+      "name": "jsonrpc-rt-compact",
+      "target": "rt-ag1s",
+      "allow_non_jsonrpc": true,
+      "disable_handler_map": false
+    }
+  ],
+
+  "statistics-aggregator": [
+    {
+      "name": "rt-ag1s",
+      "enabled": true,
+      "suspend": false,
+      "statistics": {
+        /* Собственная статистика statistics-aggregator (сколько метрик пришло и пр) */
+        "disabled": false,
+        "target": "self-rt100ms",
+        "multi_push.time": "multi_push.time",
+        "multi_push.values": "multi_push.values",
+        "push.time": "push.time",
+        "push.values": "push.values"
+      },
+      "reducer_limit": 1024,
+      "reducer_levels": 10,
+      "aggregation_step_ts": 1000000,
+      "soiled_start_ts": 1000000,
+      "resolution": "microseconds",
+      "outgoing_reduced_size": 128,
+      "pool_size": 0,
+      "prefixes": [],
+      "targets": ["btp-ag5s", "rt-ag15s"],
+      "workers": 1,
+      "suspend_push": false,
+      "aggregate_timeout_ms": 1000,
+      "startup_ignore_ms": 1000
+    },
+    {
+      "name": "rt-ag15s",
+      "enabled": true,
+      "suspend": false,
+      "reducer_limit": 1024,
+      "reducer_levels": 10,
+      "aggregation_step_ts": 15000000,
+      "soiled_start_ts": 15000000,
+      "resolution": "microseconds",
+      "outgoing_reduced_size": 128,
+      "pool_size": 0,
+      "prefixes": [],
+      "targets": ["btp-ag1m", "btp-ag7m", "btp-ag1h", "btp-ag1d"],
+      "workers": 1,
+      "suspend_push": false,
+      "aggregate_timeout_ms": 15000,
+      "startup_ignore_ms": 15000
+    },
+    {
+      "name": "self-rt100ms",
+      "enabled": true,
+      "suspend": false,
+      "reducer_limit": 1024,
+      "reducer_levels": 10,
+      "aggregation_step_ts": 100000,
+      "soiled_start_ts": 100000,
+      "resolution": "microseconds",
+      "outgoing_reduced_size": 128,
+      "pool_size": 0,
+      "prefixes": [
+        "service~~daemon:btpd~~",
+        "service~~daemon:btpd~~server1~~",
+        "script~~btp.conf~~daemon:btpd~~"
+      ],
+      "targets": ["btp-ag5s"],
+      "workers": 1,
+      "suspend_push": false,
+      "aggregate_timeout_ms": 100,
+      "startup_ignore_ms": 100
+    }
+  ]
+}
