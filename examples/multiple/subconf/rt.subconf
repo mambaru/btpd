@@ -77,10 +77,10 @@
     {
       "name": "rt-ag1s",
       "enabled": true,
-      "suspend": false,
+      "suspend": $INI{rt-ag.suspend:false},
       "statistics": {
         /* Собственная статистика statistics-aggregator (сколько метрик пришло и пр) */
-        "disabled": false,
+        "disabled": $INI{self-stat.disabled:false},
         "target": "self-rt100ms",
         "multi_push.time": "multi_push.time",
         "multi_push.values": "multi_push.values",
@@ -131,9 +131,9 @@
       "outgoing_reduced_size": 128,
       "pool_size": 0,
       "prefixes": [
-        "service~~daemon:btpd~~",
-        "service~~daemon:btpd~~server1~~",
-        "script~~btp.conf~~daemon:btpd~~"
+        "$INI{self-stat.service:service~~daemon:btpd~~}",
+        "$INI{self-stat.service:service~~daemon:btpd~~server~~}",
+        "$INI{self-stat.script:script~~btp.conf~~daemon:btpd~~}"
       ],
       "targets": ["btp-ag5s"],
       "workers": 1,
