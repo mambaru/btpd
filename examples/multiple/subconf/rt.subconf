@@ -12,7 +12,7 @@
       "receive_buffer_size": 128000000,
       "threads": $INI{rt-udp.treads:8},
       "addr": "$INI{rt-udp.addr:0.0.0.0}",
-      "port": "$INI{rt-udp.port:38000}"
+      "port": "$INI{rt-udp.port:38001}"
     },
     {
       "name": "rt-udp-compact",
@@ -26,7 +26,7 @@
       "receive_buffer_size": 128000000,
       "threads": $INI{rt-udp-compact.treads:8},
       "addr": "$INI{rt-udp-compact.addr:0.0.0.0}",
-      "port": "$INI{rt-udp-compact.port:38001}"
+      "port": "$INI{rt-udp-compact.port:38000}"
     }
   ],
 
@@ -40,7 +40,7 @@
       "target": "jsonrpc-rt",
       "threads": $INI{rt-tcp.treads:1},
       "addr": "$INI{rt-tcp.addr:0.0.0.0}",
-      "port": "$INI{rt-tcp.port:38000}"
+      "port": "$INI{rt-tcp.port:38001}"
     },
     {
       "name": "rt-tcp-compact",
@@ -51,7 +51,7 @@
       "target": "jsonrpc-rt-compact",
       "threads": $INI{rt-tcp-compact.treads:1},
       "addr": "$INI{rt-tcp-compact.addr:0.0.0.0}",
-      "port": "$INI{rt-tcp-compact.port:38001}"
+      "port": "$INI{rt-tcp-compact.port:38000}"
     }
   ],
 
@@ -79,7 +79,6 @@
       "enabled": true,
       "suspend": $INI{rt-ag.suspend:false},
       "statistics": {
-        /* Собственная статистика statistics-aggregator (сколько метрик пришло и пр) */
         "disabled": $INI{self-stat.disabled:false},
         "target": "self-rt100ms",
         "multi_push.time": "multi_push.time",

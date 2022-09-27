@@ -23,7 +23,7 @@
     {
       "name": "btp-ag1m",
       "enabled": true,
-      "suspend": $INI{ag1m.enabled:true},
+      "suspend": $INI{ag1m.suspend:false},
       "key_cache": {
         "mutex_hash": 1024,
         "gc_interval":3600,

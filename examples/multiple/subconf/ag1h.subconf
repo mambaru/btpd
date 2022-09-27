@@ -23,12 +23,12 @@
     {
       "name": "btp-ag1h",
       "enabled": true,
-      "suspend": $INI{ag1h.enabled:true},
+      "suspend": $INI{ag1h.suspend:false},
       "key_cache": {
         "mutex_hash": 1024,
         "gc_interval":3600,
         "TTL": 10800000,
-        "aggregate_last_point": true, /*<!*/
+        "aggregate_last_point": true,
         "reducer_limit": 1024,
         "reducer_levels": 2,
         "resolution": "microseconds",

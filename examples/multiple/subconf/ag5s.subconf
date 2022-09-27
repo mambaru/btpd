@@ -23,7 +23,7 @@
     {
       "name": "btp-ag5s",
       "enabled": true,
-      "suspend": $INI{ag5s.enabled:true},
+      "suspend": $INI{ag5s.suspend:false},
       "key_cache": {
         "mutex_hash": 1024,
         "gc_interval":3600,
