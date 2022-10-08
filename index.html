@@ -47,8 +47,16 @@ $(function() {
 <p><a href="https://github.com/mambaru/btpd/tree/master"><object type="image/svg+xml" data="https://github.com/mambaru/btpd/workflows/C++%20CI/badge.svg?branch=master" style="pointer-events: none;">Build Status</object></a> <a href="https://github.com/mambaru/btpd/tree/mambaru"><object type="image/svg+xml" data="https://github.com/mambaru/btpd/workflows/C++%20CI/badge.svg?branch=mambaru" style="pointer-events: none;">Build Status</object></a> <a href="https://codecov.io/gh/mambaru/btpd"><object type="image/svg+xml" data="https://codecov.io/gh/mambaru/btpd/branch/master/graph/badge.svg" style="pointer-events: none;">codecov</object></a></p>
 <h1><a class="anchor" id="autotoc_md0"></a>
 BTPD</h1>
+<p><img src="btp-graph.png" alt="" class="inline"/></p>
 <h1><a class="anchor" id="autotoc_md1"></a>
 Высокопроизводительный демон для сбора, аггрегации и хранения больших объемов статистических данных</h1>
+<p>На данный момент в продакшене на одном сервере принимается и агрегируется до 6.2 млн. значений в секунду (около полутриллиона в день) дня нескольких сотен тысяч счетчиков (графиков).</p>
+<p><img src="docs-md/images/btpd-5s-1.png" alt="" class="inline"/></p>
+<p>В хранилище на базе RocksDB сохраняются уже агрегированные данные, а сама агрегация производиться в реальном времени. Для каждого масштаба агрегации нужно настроить отдельное хранилище. У нас исторически используются: 5s, 1m, 7m, 1h, 1d (на графиках одна точка - это агрегация он пяти секунд до одного дня, соответственно). Для конкретных счетчиков процедур инициализации не предусмотрено, просто отправляете данные на сервер, графики появятся автоматически. К сожалению, инструментов для отображения графиков для btpd в свободном доступе нет и в ближайшее время не предвидится. Демон предоставляет JSON-RPC для построения графиков на базе собственных решений с использованием общедоступных библиотек.</p>
+<ul>
+<li><a class="el" href="md_docs-md_build.html">Build</a></li>
+<li><a class="el" href="md_docs-md_api.html">JSONRPC-API</a></li>
+</ul>
 <h2><a class="anchor" id="autotoc_md2"></a>
 На github.com</h2>
 <ul>
