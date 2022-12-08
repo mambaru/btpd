@@ -1,0 +1,113 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=9"/>
+<meta name="generator" content="Doxygen 1.9.1"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>btpd: Сборка и запуск</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+<link href="customdoxygen.css" rel="stylesheet" type="text/css"/>
+</head>
+<body>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr style="height: 56px;">
+  <td id="projectalign" style="padding-left: 0.5em;">
+   <div id="projectname">btpd
+   </div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- Создано системой Doxygen 1.9.1 -->
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:cf05388f2679ee054f2beb29a391d25f4e673ac3&amp;dn=gpl-2.0.txt GPL-v2 */
+$(function() {
+  initMenu('',false,false,'search.php','Поиск');
+});
+/* @license-end */</script>
+<div id="main-nav"></div>
+</div><!-- top -->
+<div class="PageDoc"><div class="header">
+  <div class="headertitle">
+<div class="title">Сборка и запуск </div>  </div>
+</div><!--header-->
+<div class="contents">
+<div class="textblock"><p>Требования для сборки:</p><ul>
+<li>g++ или clang++ (с поддержкой 17 стандарта)</li>
+<li>cmake (3.13)</li>
+<li>git</li>
+</ul>
+<div class="fragment"><div class="line">sudo apt install g++ cmake git</div>
+<div class="line">git clone https://github.com/mambaru/btpd.git</div>
+<div class="line">cd btpd</div>
+<div class="line">make release</div>
+<div class="line">./build/bin/btpd -V examples/simple/btp.conf</div>
+</div><!-- fragment --><p>Последняя команда запускает проверку конфигурации на валидность. В случае ошибки выведет конфиг с пометкой "&gt;&gt;&gt;" места ошибки. Примеры запуска:</p>
+<div class="fragment"><div class="line"># Простой запуск с выводом цветного лога на экран, выход по ^C</div>
+<div class="line">./build/bin/btpd -C examples/simple/btp.conf</div>
+<div class="line"> </div>
+<div class="line"># Запуск в режиме демона</div>
+<div class="line">./build/bin/btpd -d -C examples/simple/btp.conf</div>
+<div class="line"> </div>
+<div class="line"># В режиме демона со следящим процессом, который перезапустит основной,</div>
+<div class="line"># если тот аварийно завершит работу проработав более 600 секунд</div>
+<div class="line">./build/bin/btpd -a 600 -d -C examples/simple/btp.conf</div>
+<div class="line"> </div>
+<div class="line"># Перезапускает в любом случае, в том числе после корректного завершения работы</div>
+<div class="line">./build/bin/btpd -A -a 600 -d -C examples/simple/btp.conf</div>
+<div class="line"> </div>
+<div class="line"># Перезапускает в любом случае, в том числе после корректного завершения работы</div>
+<div class="line">./build/bin/btpd -w /path/to/working/directory -d -C examples/simple/btp.conf</div>
+<div class="line"> </div>
+<div class="line"># Запуск под пользователем</div>
+<div class="line">sudo ./build/bin/btpd -u wwwrun -d -C examples/simple/btp.conf</div>
+</div><!-- fragment --><p> В случае успешного запуска в рабочей директории будет создана директория <code>./btp</code> с пятью базами: ag5s, ag1m, ag7m, ag1h, ag1d и директория <code>./logs</code> с файлом btp.log. Измените соответствующие значения в файле btp.ini на нужные вам абсолютные пути.</p>
+<p>В директории <code>./examples/simple/</code> вариант конфигурации когда модуль real-time агрегации и модули хранилищ запускаются в одном процессе. Состоит из четырех файлов:</p><ul>
+<li>btp.conf - основной файл конфигурации</li>
+<li>btp.ini - дополнительный файл конфигурации с опциями которые скорее всего потребуют правки</li>
+<li>rocksdb-keys.ini - настройки RocksDB для хранилища ключей</li>
+<li>rocksdb-data.ini - настройки RocksDB для хранилища данных</li>
+</ul>
+<p>В директории <code>./examples/multiple/</code> такой-же вариант конфигурации, но разбитый для удобства на несколько файлов.</p>
+<p>В представленых конфигурациях определены следующие порты:</p><ul>
+<li><b>38000(tcp/udp)</b> - real-time аггрегатор входящего траффика</li>
+<li><b>38001(tcp/udp)</b> - real-time аггрегатор входящего траффика для compat api (см. <a class="el" href="md_docs_md_api.html">JSONRPC-API</a>)</li>
+<li><b>37000(tcp)</b> - получение данных для 5-секундного хранилища <b>ag5s</b></li>
+<li><b>37001(tcp)</b> - <b>ag1m</b> - минутного хранилища</li>
+<li><b>37002(tcp)</b> - <b>ag7m</b> - 7-минутного</li>
+<li><b>37003(tcp)</b> - <b>ag1h</b> - часового</li>
+<li><b>37004(tcp)</b> - <b>ag1d</b> - дневного</li>
+</ul>
+<p>Сборка займет достаточно времени (от 40 мин и более), но в основном за счет того, что система сборки автоматически загрузит и скомпилирует нужные версии boost и rocksdb. Если у вас установлены boost 1.76 и rocksdb, то можно ускорить сборку: </p><div class="fragment"><div class="line">BOOST_ROOT=/path/to/boost ROCKSDB_ROOT=/path/to/rocksdb make release</div>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md48"></a>
+Проверка работоспособности</h2>
+<p>Запускаем демон:</p>
+<div class="fragment"><div class="line">./build/bin/btpd -d -W -C examples/multiple/btp.conf</div>
+</div><!-- fragment --><p> Опция <code>-W</code> возвращает управление над консолью, только после полной инициалализации и запуска демона, а не сразу после демонизации. Это гарантирует, что к моменту выполнения следующей команды, порты будут открыты.</p>
+<p>После получения консоли, запускаем танк, который накидает в демон немного данных: </p><div class="fragment"><div class="line">./build/bin/btpd -C examples/tank/tank.conf</div>
+</div><!-- fragment --><p> Время работы танка порядка 10 секунд. После завершения его работы запускаем <code>telnet</code> и подключаемся к 5-секундному хранилищу:</p>
+<div class="fragment"><div class="line">telnet 0.0.0.0 37000</div>
+</div><!-- fragment --><p> Отправляем запрос: </p><div class="fragment"><div class="line">{ &quot;method&quot;:&quot;get&quot;, &quot;params&quot;:{&quot;name&quot;:&quot;script~~MyScript~~MyService~~MyOp&quot;}, &quot;id&quot;:1}</div>
+</div><!-- fragment --><p> Должны получить ответ похожий на этот: </p><div class="fragment"><div class="line">{&quot;jsonrpc&quot;:&quot;2.0&quot;,&quot;result&quot;:{&quot;counters&quot;:[[1664234138698304,200,0,200,200,200,200,200,200,200,0],[1664234143698304,200,0,200,200,200,200,200,200,200,0]]},&quot;id&quot;:1}</div>
+</div><!-- fragment --><p> Чтобы получить данные из других хранилищ, нужно повторно запустить танк через минуту, 7 минут и т.д. На самом деле это зависит от опции <code>aggregate_last_point</code> которая установлена только для часового и дневных графиков - это исключительно для удобства отображения.</p>
+<p>Остановить работающий демон можно так: </p><div class="fragment"><div class="line">killall btpd</div>
+</div><!-- fragment --><p> или так: </p><div class="fragment"><div class="line">kill $(cat btpd-btp.conf.pid)</div>
+</div><!-- fragment --> </div></div><!-- contents -->
+</div><!-- PageDoc -->
+<!-- start footer part -->
+<hr class="footer"/><address class="footer"><small>
+Создано системой&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.1
+</small></address>
+</body>
+</html>
