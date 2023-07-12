@@ -18,3 +18,6 @@
     "add3-params":{"name":"script~~multi_add-test.json~~btpd-test~~multi_add", "cl":"${value}", "count":"${count}"}
   }
 }
+
+
+{"jsonrpc":"2.0","method":"push","params":{"name":"script~~phpscript2~~phpservice2~~phpserver1~~op1","ts":1678557164683900,"avg":1000317,"count":1,"perc50":1000317,"perc80":1000317,"perc95":1000317,"perc99":1000317,"perc100":1000317,"lossy":0,"min":1000317,"max":1000317,"data":[1000317]}, "id":1}

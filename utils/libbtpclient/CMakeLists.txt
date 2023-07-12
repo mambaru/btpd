@@ -1,3 +1,9 @@
+if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+  #if ( CMAKE_CXX_STANDARD EQUAL 20)
+    update_ogenc(TARGETS btpclient WARNINGS -Wnull-dereference OFF)
+  #endif()
+endif()
+
 add_library(btpclient client.cpp gateway.cpp btpclient.cpp)
 target_include_directories(btpclient PUBLIC ${wfc_btp_SOURCE_DIR}/package/ ${wfc_btp_SOURCE_DIR}/libbtp/ ${CMAKE_CURRENT_SOURCE_DIR})
 wci_targets(btpclient)

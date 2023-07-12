@@ -7,4 +7,3 @@ wci_test(
   NO_MEMCHECK
 )
 
-
