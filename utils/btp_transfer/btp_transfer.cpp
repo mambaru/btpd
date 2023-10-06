@@ -73,8 +73,9 @@ void process_data( size_t pos, btpclient::aggregated_list&& agl )
   if ( ready_for )
   {
     ready_for &= agl.size() > min_points;
-    ready_for &= agl[0].ts > ( time(nullptr) - time_t(scale * max_lag) ) * 1000000 ;
+    ready_for &= agl.back().ts > ( time(nullptr) - time_t(scale * max_lag) ) * 1000000 ;
   }
+
 
   if ( !ready_for  )
   {
