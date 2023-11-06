@@ -1,0 +1,11 @@
+.DS_Store
+.ci
+.cppcheck
+.github
+.idea
+Dockerfile
+docs-md
+Readme.md
+Doxyfile
+.travis.yml
+customdoxygen.css
