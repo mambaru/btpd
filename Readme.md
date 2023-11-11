@@ -20,7 +20,6 @@ BTPD
 * [Build](docs-md/build.md)
 * [JSONRPC-API](docs-md/api.md)
 
-
 ## На github.com
 
 * Репозитарий на [github.com](https://github.com/mambaru/btpd)
