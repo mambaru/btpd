@@ -21,3 +21,6 @@ CMakeCache.txt
 config.h
 docs
 /.idea
+id_rsa
+id_rsa.pub
+/logs

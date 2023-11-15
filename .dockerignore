@@ -9,3 +9,6 @@ Readme.md
 Doxyfile
 .travis.yml
 customdoxygen.css
+run.sh
+get_ssh_keys
+.gitignore
