@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.10)
 
-project(btpd)
+project(btpd VERSION "0.9.8")
 
 include(cmake/ci.cmake)
 ogenc_warning(-Wunused-const-variable "" OFF)
@@ -15,3 +15,5 @@ if ( BUILD_TESTING )
   enable_testing()
   add_subdirectory(tests)
 endif()
+
+include(cmake/install.cmake)
