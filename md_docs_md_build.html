@@ -82,7 +82,7 @@ $(function() {
 <p>В директории <code>./examples/multiple/</code> такой-же вариант конфигурации, но разбитый для удобства на несколько файлов.</p>
 <p>В представленых конфигурациях определены следующие порты:</p><ul>
 <li><b>38000(tcp/udp)</b> - real-time аггрегатор входящего траффика</li>
-<li><b>38001(tcp/udp)</b> - real-time аггрегатор входящего траффика для compat api (см. <a class="el" href="md_docs_md_api.html">JSONRPC-API</a>)</li>
+<li><b>38001(tcp/udp)</b> - real-time аггрегатор входящего траффика для compact api (см. <a class="el" href="md_docs_md_api.html">JSONRPC-API</a>)</li>
 <li><b>37000(tcp)</b> - получение данных для 5-секундного хранилища <b>ag5s</b></li>
 <li><b>37001(tcp)</b> - <b>ag1m</b> - минутного хранилища</li>
 <li><b>37002(tcp)</b> - <b>ag7m</b> - 7-минутного</li>
@@ -90,7 +90,7 @@ $(function() {
 <li><b>37004(tcp)</b> - <b>ag1d</b> - дневного</li>
 </ul>
 <p>Сборка займет достаточно времени (от 40 мин и более), но в основном за счет того, что система сборки автоматически загрузит и скомпилирует нужные версии boost и rocksdb. Если у вас установлены boost 1.76 и rocksdb, то можно ускорить сборку: </p><div class="fragment"><div class="line">BOOST_ROOT=/path/to/boost ROCKSDB_ROOT=/path/to/rocksdb make release</div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md48"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md49"></a>
 Проверка работоспособности</h2>
 <p>Запускаем демон:</p>
 <div class="fragment"><div class="line">./build/bin/btpd -d -W -C examples/multiple/btp.conf</div>

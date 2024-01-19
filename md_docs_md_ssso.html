@@ -58,8 +58,8 @@ $(function() {
 <div class="line">    {&quot;name&quot;:&quot;service~~memcache~~memcache2~~get&quot;, &quot;data&quot;:[200]},</div>
 <div class="line">    {&quot;name&quot;:&quot;script~~MyScript1.php~~memcache~~get&quot;, &quot;data&quot;:[200]}</div>
 <div class="line">]</div>
-</div><!-- fragment --><p>Именно в таком виде ключи (имена графиков) сохраняются в хранилище btp (сами данные в другом виде). Данные для отображения можно получить с помощью <a href="api-rt.md#get">get</a> или <a href="api-rt.md#multi_get">multi_get</a>, а выборку ключей <a href="api-rt.md#tree">tree</a> или <a href="api-rt.md#select">select</a></p>
-<h1><a class="anchor" id="autotoc_md49"></a>
+</div><!-- fragment --><p>Именно в таком виде ключи (имена графиков) сохраняются в хранилище btp (сами данные в другом виде). Данные для отображения можно получить с помощью <a href="api.md#get">get</a> или <a href="api.md#multi_get">multi_get</a>, а выборку ключей <a href="api.md#tree">tree</a> или <a href="api.md#select">select</a></p>
+<h1><a class="anchor" id="autotoc_md50"></a>
 Если нужно больше графиков</h1>
 <p>В рамках этой концепции нельзя посмотреть какую нагрузку дает скрипт <b>MyScript1.php</b> на конкретный сервер, например на тот-же <b>memcache2</b>, а только на весь сервис в целом <b>memcache</b>. Можно добавить четвертый счетчик, например <code>"script~~MyScript1.php~~memcache~~memcache2~~get"</code>, но вот только web-интерфейс не умеет с ним работать. В качестве альтернативы можно имя сервера добавить к имени операции, например так:</p>
 <div class="fragment"><div class="line">[</div>
@@ -81,7 +81,7 @@ $(function() {
 <div class="line">    {&quot;name&quot;:&quot;service~~memcache~~memcache2~~get:read&quot;, &quot;data&quot;:[4000]},</div>
 <div class="line">    {&quot;name&quot;:&quot;script~~MyScript1.php~~memcache~~get:read&quot;, &quot;data&quot;:[4000]},</div>
 <div class="line">]</div>
-</div><!-- fragment --><p>Тогда график с операциями <b>get</b> это время выполнения запроса, а <b>get:write</b> и <b>get:read</b> - это размер запроса и ответа в байтах. Но учитывайте, что объем хранимых данных также увеличится в три раза. s </p>
+</div><!-- fragment --><p>Тогда график с операциями <b>get</b> это время выполнения запроса, а <b>get:write</b> и <b>get:read</b> - это размер запроса и ответа в байтах. Но учитывайте, что объем хранимых данных также увеличится в три раза. </p>
 </div></div><!-- contents -->
 </div><!-- PageDoc -->
 <!-- start footer part -->
