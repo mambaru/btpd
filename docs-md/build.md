@@ -51,7 +51,7 @@ sudo ./build/bin/btpd -u wwwrun -d -C examples/simple/btp.conf
 
 В представленых конфигурациях определены следующие порты:
 * **38000(tcp/udp)** - real-time аггрегатор входящего траффика
-* **38001(tcp/udp)** - real-time аггрегатор входящего траффика для compat api (см. [JSONRPC-API](docs-md/api.md))
+* **38001(tcp/udp)** - real-time аггрегатор входящего траффика для compact api (см. [JSONRPC-API](docs-md/api.md))
 * **37000(tcp)** - получение данных для 5-секундного хранилища **ag5s**
 * **37001(tcp)** - **ag1m** - минутного хранилища
 * **37002(tcp)** - **ag7m** - 7-минутного
