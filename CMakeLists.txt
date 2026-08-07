@@ -4,7 +4,8 @@ project(btpd VERSION "0.9.8")
 
 include(cmake/ci.cmake)
 ogenc_warning(-Wunused-const-variable "" OFF)
-set(ENV{ENABLE_STAT} ON)
+#set(ENV{ENABLE_STAT} ON)
+set(ENABLE_STAT ON CACHE BOOL "Принудительное включение статистики" FORCE )
 wci_submodule(NAME wfcroot SUPERMODULE)
 wci_submodule(NAME wfc_btp)
 

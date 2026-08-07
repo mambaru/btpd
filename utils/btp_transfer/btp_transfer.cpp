@@ -10,6 +10,7 @@ void query_data( size_t pos, bool compact = true );
 void process_data( size_t pos, btpclient::aggregated_list&& );
 void show_stat();
 
+namespace{
 boost::asio::io_context io_context;
 btpclient from;
 btpclient to;
@@ -17,7 +18,7 @@ size_t max_lag = 0;
 size_t min_points =0;
 size_t scale  = 1;
 std::vector<std::string> all_names;
-
+}
 
 void process_names(std::vector<std::string> names)
 {

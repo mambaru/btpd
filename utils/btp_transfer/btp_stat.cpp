@@ -4,16 +4,18 @@
 #include "btpclient.hpp"
 
 using namespace std::placeholders;
+
 void process_names( std::vector< std::string> names );
 void query_data( size_t pos );
 void process_data( size_t pos, btpclient::aggregated_list );
 void show_stat();
 
+namespace {
 btpclient from;
 std::vector< std::string> all_names;
 std::map< size_t, size_t, std::greater<size_t> > all_sizes;
 size_t all_values = 0;
-
+}
 
 void process_names( std::vector< std::string> names )
 {
